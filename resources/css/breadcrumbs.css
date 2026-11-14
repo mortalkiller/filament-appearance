@@ -1,0 +1,32 @@
+/*
+ * Breadcrumbs: the way back in the palette's colour, the current page muted, a little smaller
+ * than the text around them. Filament draws every crumb in the same grey, so the links do not
+ * read as links.
+ */
+.fi-breadcrumbs ol {
+    column-gap: 0.375rem;
+
+    & li {
+        column-gap: 0.375rem;
+        font-size: 0.8125rem;
+        line-height: 1.25rem;
+        font-weight: 400;
+
+        &:not(:last-child) a {
+            color: var(--primary-600);
+
+            &:hover {
+                color: var(--primary-700);
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+.dark .fi-breadcrumbs ol li:not(:last-child) a {
+    color: var(--primary-400);
+
+    &:hover {
+        color: var(--primary-300);
+    }
+}

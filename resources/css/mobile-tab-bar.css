@@ -1,0 +1,452 @@
+/*
+ * AppearancePlugin::mobileTabBar(). Phone and tablet (below 1024px):
+ * resources/views/mobile-tab-bar.blade.php. The tab bar has the panel's shortcuts, an optional
+ * action in the middle and "More", which opens the rest of the menu. While it is on the page, the
+ * topbar shows the logo instead of the menu button.
+ *
+ * The rules that rearrange the topbar look for "tabbar" in the "filament-appearance" meta tag
+ * (resources/views/head.blade.php) rather than for the bar itself: the bar is at the very end of
+ * the page, and while the page is still arriving the topbar would be laid out as on desktop.
+ *
+ * On a phone the bar and its sheet are the panel's navigation, as the sidebar is on desktop, so
+ * they wear the same colours: the palette's navigation colour and the text, hover and active
+ * tones worked out for it (the --fap-navigation-* variables, which already change in dark mode).
+ */
+.fap-tab-bar {
+    display: none;
+}
+
+@media (max-width: 1023.98px) {
+    .fap-tab-bar {
+        position: fixed;
+        inset: auto 0 0;
+        z-index: 25;
+        display: grid;
+        grid-template-columns: repeat(var(--fap-tab-bar-columns, 5), minmax(0, 1fr));
+        align-items: center;
+        padding: 0.375rem 0.5rem calc(0.5rem + env(safe-area-inset-bottom, 0px));
+        border-top: 1px solid var(--fap-navigation-ring);
+        background-color: var(--fap-navigation);
+    }
+
+    .fap-tab-bar-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.125rem;
+        min-height: 3rem;
+        border-radius: 0.5rem;
+        font-size: 0.6875rem;
+        line-height: 0.875rem;
+        color: var(--fap-navigation-text-muted);
+
+        & > svg {
+            width: 1.375rem;
+            height: 1.375rem;
+        }
+
+        /* Like the active item of the sidebar: a tone over the bar, and the full text colour. */
+        &[aria-current="page"] {
+            background-color: var(--fap-navigation-active);
+            font-weight: 600;
+            color: var(--fap-navigation-text);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--fap-navigation-text);
+            outline-offset: -2px;
+        }
+    }
+
+    .fap-tab-bar-action {
+        display: flex;
+        justify-content: center;
+    }
+
+    /* Room for the bar under the page content. */
+    :root:has(meta[name="filament-appearance"][content~="tabbar"]) .fi-main {
+        padding-bottom: 5rem;
+    }
+
+    /* App bar: logo on the left; "More" on the tab bar opens the menu. */
+    :root:has(meta[name="filament-appearance"][content~="tabbar"]) .fi-topbar-start {
+        display: flex;
+        flex: none;
+        margin-inline-end: auto;
+    }
+
+    /* The search is in the "More" sheet down here, so the topbar keeps the logo, the bell and the avatar. */
+    :root:has(meta[name="filament-appearance"][content~="tabbar"]) .fi-topbar-end {
+        flex: none;
+        margin-inline-start: 0.75rem;
+    }
+
+    :root:has(meta[name="filament-appearance"][content~="tabbar"]) .fi-topbar .fi-global-search-ctn {
+        display: none;
+    }
+
+    /* No sidebar to open, close, collapse or expand down here: "More" does that job. */
+    :root:has(meta[name="filament-appearance"][content~="tabbar"]) :is(.fi-topbar-open-sidebar-btn, .fi-topbar-close-sidebar-btn, .fi-topbar-collapse-sidebar-btn-ctn) {
+        display: none !important;
+    }
+}
+
+/*
+ * The "More" sheet (mobile-tab-bar.blade.php, Navigation\MobileMenu): slides up from the tab
+ * bar with the rest of the menu. Open groups are tiles; collapsed groups are a row that opens a
+ * list. Never shown from 1024px up, where the sidebar is always there.
+ */
+.fap-menu-backdrop,
+.fap-menu-sheet {
+    display: none;
+}
+
+@media (max-width: 1023.98px) {
+    body.fap-mobile-menu-open {
+        overflow: hidden;
+    }
+
+    .fap-menu-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 23;
+        display: block;
+        background-color: rgb(0 0 0 / 0.5);
+    }
+
+    .fap-menu-sheet {
+        position: fixed;
+        inset: auto 0 calc(4rem + env(safe-area-inset-bottom, 0px));
+        z-index: 24;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        max-height: calc(100dvh - 8rem);
+        padding: 0 1rem 1rem;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        border-radius: 1.25rem 1.25rem 0 0;
+        background-color: var(--fap-navigation);
+        box-shadow: 0 -12px 40px rgb(0 0 0 / 0.2);
+        color: var(--fap-navigation-text);
+    }
+
+    .fap-menu-backdrop[x-cloak],
+    .fap-menu-sheet[x-cloak] {
+        display: none;
+    }
+
+    /*
+     * The handle at the top of the sheet: drag it down, or tap it, to close the sheet. It is a
+     * strip as wide as the sheet so a thumb finds it, and it keeps the page from scrolling while
+     * it is dragged.
+     */
+    .fap-menu-handle {
+        display: flex;
+        flex: none;
+        justify-content: center;
+        width: 100%;
+        padding: 0.625rem 0 0.5rem;
+        cursor: grab;
+        touch-action: none;
+
+        &:active {
+            cursor: grabbing;
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--fap-navigation-text);
+            outline-offset: -2px;
+        }
+    }
+
+    .fap-menu-grabber {
+        width: 2.25rem;
+        height: 0.25rem;
+        border-radius: 9999px;
+        background-color: var(--fap-navigation-text);
+        opacity: 0.35;
+    }
+
+    /* While it follows the finger the sheet must not ease behind it. */
+    .fap-menu-sheet[data-dragging] {
+        transition: none;
+    }
+
+    .fap-menu-search {
+        display: flex;
+        flex: none;
+        align-items: center;
+        gap: 0.5rem;
+        height: 2.75rem;
+        padding-inline: 0.75rem;
+        border: 1px solid var(--fap-navigation-ring);
+        border-radius: 0.5rem;
+        background-color: var(--fap-navigation-hover);
+        color: var(--fap-navigation-text-muted);
+
+        & > svg {
+            flex: none;
+            width: 1.125rem;
+            height: 1.125rem;
+        }
+
+        & > input {
+            flex: 1;
+            min-width: 0;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            font-size: 1rem;
+            color: var(--fap-navigation-text);
+            outline: none;
+            box-shadow: none;
+
+            &::placeholder {
+                color: var(--fap-navigation-text-muted);
+            }
+        }
+
+        &:focus-within {
+            border-color: var(--fap-navigation-text);
+            box-shadow: 0 0 0 1px var(--fap-navigation-text);
+        }
+    }
+
+    /*
+     * The panel's global search, at the top of the sheet in place of the plain filter. It wears
+     * the sheet's colours, and its results come in the flow of the sheet, above the pages,
+     * instead of floating over them.
+     */
+    .fap-menu-global-search {
+        flex: none;
+
+        & .fi-global-search-ctn {
+            display: block;
+        }
+
+        & .fi-global-search {
+            position: static;
+        }
+
+        & .fi-input-wrp {
+            min-height: 2.75rem;
+            background-color: var(--fap-navigation-hover);
+            --tw-ring-color: var(--fap-navigation-ring);
+        }
+
+        & .fi-input-wrp .fi-icon {
+            color: var(--fap-navigation-text-muted);
+        }
+
+        & .fi-input-wrp-suffix {
+            display: none;
+        }
+
+        & input {
+            font-size: 1rem;
+            color: var(--fap-navigation-text);
+
+            &::placeholder {
+                color: var(--fap-navigation-text-muted);
+            }
+        }
+
+        & .fi-global-search-results-ctn {
+            position: static;
+            width: auto;
+            max-width: none;
+            max-height: none;
+            margin-top: 0.5rem;
+            transform: none;
+        }
+    }
+
+    .fap-menu-heading {
+        margin: 0.875rem 0 0.5rem;
+        font-size: 0.6875rem;
+        font-weight: 500;
+        line-height: 1rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--fap-navigation-text-muted);
+    }
+
+    /* Pages outside any group come first, with no heading: keep them off the search field. */
+    :is(.fap-menu-search, .fap-menu-global-search) + div > .fap-menu-tiles:first-child {
+        margin-top: 0.75rem;
+    }
+
+    .fap-menu-tiles {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.5rem;
+    }
+
+    .fap-menu-tile {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.375rem;
+        min-height: 4.75rem;
+        padding: 0.625rem 0.25rem;
+        border-radius: 0.75rem;
+        background-color: var(--fap-navigation-hover);
+        font-size: 0.75rem;
+        line-height: 0.9375rem;
+        text-align: center;
+        color: var(--fap-navigation-text);
+
+        & > svg {
+            width: 1.375rem;
+            height: 1.375rem;
+            color: var(--fap-navigation-text-muted);
+        }
+
+        &[aria-current="page"] {
+            background-color: var(--fap-navigation-active);
+            box-shadow: inset 0 0 0 2px var(--fap-navigation-text);
+            font-weight: 600;
+
+            & > svg {
+                color: var(--fap-navigation-text);
+            }
+        }
+
+        & > .fap-menu-badge {
+            position: absolute;
+            inset-block-start: 0.375rem;
+            inset-inline-end: 0.375rem;
+        }
+    }
+
+    .fap-menu-group {
+        border-top: 1px solid var(--fap-navigation-ring);
+    }
+
+    .fap-menu-heading + .fap-menu-tiles + .fap-menu-group,
+    div + .fap-menu-group {
+        margin-top: 0.5rem;
+    }
+
+    .fap-menu-group + .fap-menu-group {
+        margin-top: 0;
+    }
+
+    .fap-menu-row,
+    .fap-menu-link {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        width: 100%;
+        min-height: 3rem;
+        font-size: 0.9375rem;
+        text-align: start;
+        color: var(--fap-navigation-text);
+
+        & svg {
+            flex: none;
+            width: 1.125rem;
+            height: 1.125rem;
+            color: var(--fap-navigation-text-muted);
+        }
+    }
+
+    .fap-menu-row {
+        justify-content: space-between;
+        font-weight: 500;
+
+        &[aria-expanded="true"] .fap-menu-row-end > svg {
+            rotate: 180deg;
+        }
+    }
+
+    .fap-menu-row-end {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.8125rem;
+        font-weight: 400;
+        color: var(--fap-navigation-text-muted);
+    }
+
+    .fap-menu-list {
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 0.5rem;
+    }
+
+    .fap-menu-link {
+        min-height: 2.75rem;
+        padding-inline: 0.5rem;
+        border-radius: 0.5rem;
+
+        &[aria-current="page"] {
+            background-color: var(--fap-navigation-active);
+            font-weight: 600;
+
+            & svg {
+                color: var(--fap-navigation-text);
+            }
+        }
+
+        & > .fap-menu-badge {
+            margin-inline-start: auto;
+        }
+    }
+
+    .fap-menu-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 1.25rem;
+        height: 1.25rem;
+        padding-inline: 0.375rem;
+        border-radius: 9999px;
+        background-color: var(--fap-navigation-active);
+        font-size: 0.75rem;
+        font-weight: 600;
+        line-height: 1;
+        color: var(--fap-navigation-text);
+
+        /* A coloured count keeps its status colours, in a light pill that reads on any bar. */
+
+        &[data-color="danger"] {
+            background-color: var(--danger-100);
+            color: var(--danger-700);
+        }
+
+        &[data-color="warning"] {
+            background-color: var(--warning-100);
+            color: var(--warning-800);
+        }
+
+        &[data-color="success"] {
+            background-color: var(--success-100);
+            color: var(--success-700);
+        }
+
+        &[data-color="primary"] {
+            background-color: var(--primary-100);
+            color: var(--primary-700);
+        }
+    }
+
+    .fap-tab-bar-more {
+        display: inline-flex;
+
+        & > svg {
+            width: 1.375rem;
+            height: 1.375rem;
+        }
+    }
+
+    .fap-tab-bar-item[data-open="true"] {
+        background-color: var(--fap-navigation-active);
+        font-weight: 600;
+        color: var(--fap-navigation-text);
+    }
+}

@@ -1,0 +1,111 @@
+/*
+ * A panel with sidebarCollapsibleOnDesktop(). On desktop the topbar's first corner sits above the
+ * sidebar and wears its colour (navigation.css), so it follows the sidebar's width: wide with the
+ * full logo, narrow with the compact one (AppearancePlugin::collapsedBrandLogo(),
+ * resources/views/collapsed-logo.blade.php). The button that collapses and expands the sidebar
+ * moves out of that corner, onto the plain part of the topbar.
+ */
+.fap-collapsed-logo {
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .fi-body-has-sidebar-collapsible-on-desktop .fi-topbar-start {
+        position: relative;
+        margin-inline-end: 3.25rem;
+    }
+
+    .fi-body-has-sidebar-collapsible-on-desktop .fi-topbar-collapse-sidebar-btn-ctn {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: calc(100% + 0.5rem);
+        translate: 0 -50%;
+    }
+
+    /*
+     * The sidebar is collapsed: Alpine says so, or, while the page loads and Alpine has not
+     * started yet (x-cloak), the choice read from the browser's storage does (head.blade.php).
+     */
+    :is(
+        .fi-body-has-sidebar-collapsible-on-desktop:has(.fi-main-sidebar:not(.fi-sidebar-open):not([x-cloak])),
+        .fap-sidebar-collapsed .fi-body-has-sidebar-collapsible-on-desktop:has(.fi-main-sidebar[x-cloak])
+    ) {
+        & .fi-topbar-start {
+            width: var(--sidebar-collapsed-width);
+            padding-inline-start: 0;
+            justify-content: center;
+        }
+
+        & .fi-topbar-start :is(.fi-logo, a:has(> .fi-logo)) {
+            display: none;
+        }
+
+        & .fap-collapsed-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--fap-navigation-text);
+        }
+    }
+
+    /*
+     * While the page loads. Filament hides a collapsible sidebar until Alpine starts, which left
+     * the page without its sidebar for a moment on every full load. It is shown from the first
+     * paint instead, in the state the user left it in.
+     */
+    .fi-body-has-sidebar-collapsible-on-desktop .fi-main-sidebar[x-cloak] {
+        display: flex !important;
+    }
+
+    /*
+     * Left open (or never touched): Alpine has not marked it open yet, so Filament gives it the
+     * collapsed geometry. Put back the open one, and leave out what only a collapsed sidebar shows.
+     */
+    :root:not(.fap-sidebar-collapsed) .fi-body-has-sidebar-collapsible-on-desktop .fi-main-sidebar[x-cloak] {
+        width: var(--sidebar-width);
+
+        & .fi-sidebar-nav {
+            padding-inline: calc(var(--spacing) * 6);
+            scrollbar-gutter: stable;
+        }
+
+        & .fi-sidebar-nav-groups {
+            width: auto;
+            max-width: none;
+            margin-inline: calc(var(--spacing) * -2);
+        }
+
+        & :is(.fi-sidebar-database-notifications-btn, .fi-sidebar-group-dropdown-trigger-btn, .fi-sidebar-item-btn, .fi-user-menu-trigger) {
+            padding-inline: calc(var(--spacing) * 2);
+        }
+
+        & [x-show="! $store.sidebar.isOpen"] {
+            display: none;
+        }
+    }
+
+    /* Left collapsed: the narrow column only; its icons come in when Alpine starts. */
+    .fap-sidebar-collapsed .fi-body-has-sidebar-collapsible-on-desktop .fi-main-sidebar[x-cloak] > * {
+        visibility: hidden;
+    }
+
+    .fap-collapsed-logo-image {
+        display: flex;
+        height: 1.75rem;
+        width: auto;
+
+        & > svg {
+            height: 100%;
+            width: auto;
+        }
+    }
+
+    .fap-collapsed-logo-dark,
+    .dark .fap-collapsed-logo-light {
+        display: none;
+    }
+
+    .dark .fap-collapsed-logo-dark {
+        display: flex;
+    }
+}

@@ -1,0 +1,32 @@
+/*
+ * Filament Appearance. Import this file from the panel's theme, after Filament's own theme:
+ *
+ *     @import '../../../../vendor/filament/filament/resources/css/theme.css';
+ *     @import '../../../../vendor/mortalkiller/filament-appearance/resources/css/index.css';
+ *
+ * Everything here is plain CSS on Filament's own class names and on this package's "fap-"
+ * classes: there are no utility classes to scan, so no @source line is needed.
+ */
+@import './navigation.css';
+@import './sidebar-collapse.css';
+@import './topbar-search.css';
+@import './picker.css';
+@import './progress.css';
+@import './sparkline.css';
+@import './bar-list.css';
+@import './stats.css';
+@import './equal-height.css';
+@import './key-value.css';
+@import './plain-table.css';
+@import './caps-labels.css';
+@import './rules.css';
+@import './actions-below.css';
+@import './radio-cards.css';
+@import './dropzone.css';
+@import './breakdown.css';
+@import './breadcrumbs.css';
+@import './tabs.css';
+@import './table-toolbar.css';
+@import './mobile-tab-bar.css';
+@import './mobile-tables.css';
+@import './edge-to-edge.css';

@@ -1,0 +1,16 @@
+/*
+ * A table with a content layout (Split / Stack columns) keeps each record's actions under its
+ * content at every width, as Filament already lays it out on a phone, instead of moving them to
+ * the end of the row on wider screens. For lists where the actions are the point of the row
+ * (accept, link, ignore…). Opt in on the table:
+ *
+ *     $table->columns([Split::make([...])])->extraAttributes(['class' => 'fap-actions-below'])
+ */
+.fap-actions-below .fi-ta-content:not(.fi-ta-content-grid) .fi-ta-record .fi-ta-record-content-ctn {
+    flex-direction: column;
+    align-items: stretch;
+
+    & > .fi-ta-actions {
+        justify-content: flex-start;
+    }
+}

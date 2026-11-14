@@ -1,0 +1,186 @@
+/*
+ * The palette picker (resources/views/palette-picker.blade.php).
+ * Each palette card draws a small panel in that palette's own colours (--fap-thumb-*), so those
+ * colours are fixed per card and do not follow the active palette.
+ */
+.fap-picker {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.fap-picker-mode .fi-theme-switcher {
+    display: inline-grid;
+    grid-template-columns: repeat(3, 2.5rem);
+    gap: 0.25rem;
+    padding: 0.25rem;
+    border-radius: 0.5rem;
+    background-color: var(--gray-100);
+}
+
+.dark .fap-picker-mode .fi-theme-switcher {
+    background-color: var(--gray-800);
+}
+
+.fap-palette-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+    gap: 1rem;
+}
+
+.fap-palette-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    width: 100%;
+    padding: 0.625rem;
+    border: 1px solid var(--gray-300);
+    border-radius: 0.75rem;
+    background-color: white;
+    text-align: start;
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--gray-50);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--primary-600);
+        outline-offset: 2px;
+    }
+
+    &[aria-checked="true"] {
+        border-color: var(--primary-600);
+        box-shadow: inset 0 0 0 1px var(--primary-600);
+    }
+}
+
+.dark .fap-palette-card {
+    border-color: var(--gray-600);
+    background-color: var(--gray-900);
+
+    &:hover {
+        background-color: var(--gray-800);
+    }
+
+    &[aria-checked="true"] {
+        border-color: var(--primary-400);
+        box-shadow: inset 0 0 0 1px var(--primary-400);
+    }
+}
+
+.fap-palette-thumb {
+    display: flex;
+    flex-direction: column;
+    height: 5.5rem;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+    border: 1px solid var(--gray-200);
+    border-radius: 0.5rem;
+}
+
+.dark .fap-palette-thumb {
+    border-color: var(--gray-700);
+}
+
+.fap-palette-thumb-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    height: 1.125rem;
+    padding-inline: 0.4rem;
+    background-color: var(--fap-thumb-navigation);
+
+    & > i {
+        width: 1.1rem;
+        height: 0.25rem;
+        border-radius: 9999px;
+        background-color: var(--fap-thumb-navigation-text);
+        opacity: 0.45;
+    }
+
+    & > i:first-child {
+        width: 1.6rem;
+        opacity: 1;
+    }
+}
+
+.fap-palette-thumb-page {
+    display: flex;
+    flex: 1;
+    padding: 0.4rem;
+    background-color: var(--fap-thumb-background);
+
+    & > span {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        gap: 0.3rem;
+        padding: 0.4rem;
+        border-radius: 0.3rem;
+        background-color: #ffffff;
+    }
+
+    & i {
+        height: 0.25rem;
+        border-radius: 9999px;
+        background-color: #d4d4d4;
+    }
+
+    & i:first-child {
+        width: 45%;
+        background-color: var(--fap-thumb-primary);
+    }
+
+    & b {
+        align-self: flex-end;
+        width: 38%;
+        height: 0.7rem;
+        margin-top: auto;
+        border-radius: 0.2rem;
+        background-color: var(--fap-thumb-action);
+    }
+}
+
+.fap-palette-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--gray-950);
+}
+
+.fap-palette-note {
+    font-size: 0.8125rem;
+    color: var(--gray-600);
+}
+
+.dark .fap-palette-name {
+    color: white;
+}
+
+.dark .fap-palette-note {
+    color: var(--gray-300);
+}
+
+.fap-palette-own {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.fap-palette-own-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.25rem;
+}
+
+.fap-palette-empty {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+}
+
+.dark .fap-palette-empty {
+    color: var(--gray-300);
+}
+
+.fap-palette-create {
+    margin-top: 1rem;
+}

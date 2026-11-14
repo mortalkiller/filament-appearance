@@ -1,0 +1,105 @@
+/*
+ * A thin progress bar (Support\ProgressBar, ProgressColumn, ProgressEntry, Stat::progress()), or
+ * by hand: <span class="fap-progress"><i style="width: 60%"></i></span>.
+ */
+.fap-progress {
+    display: block;
+    width: 100%;
+    height: 0.5rem;
+    overflow: hidden;
+    border-radius: 9999px;
+    background-color: var(--gray-100);
+
+    & > i {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        /* A view can give any registered colour: style="--fap-progress-color: var(--clay-500)". */
+        background-color: var(--fap-progress-color, var(--primary-500));
+    }
+}
+
+.dark .fap-progress {
+    background-color: rgb(255 255 255 / 0.08);
+}
+
+.fi-wi-stats-overview-stat-description:has(.fap-progress),
+.fi-wi-stats-overview-stat-description:has(.fap-progress) > span {
+    display: block;
+    width: 100%;
+}
+
+.fap-progress[data-color="success"] > i {
+    background-color: var(--success-500);
+}
+
+.fap-progress[data-color="warning"] > i {
+    background-color: var(--warning-500);
+}
+
+.fap-progress[data-color="danger"] > i {
+    background-color: var(--danger-500);
+}
+
+.fap-progress[data-color="info"] > i {
+    background-color: var(--info-500);
+}
+
+.fap-progress[data-color="gray"] > i {
+    background-color: var(--gray-300);
+}
+
+.dark .fap-progress[data-color="gray"] > i {
+    background-color: var(--gray-600);
+}
+
+/* The bar with its percentage beside it. */
+.fap-progress-with-value {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    min-width: 8rem;
+
+    & > .fap-progress {
+        flex: 1;
+        height: 0.375rem;
+    }
+}
+
+/* As wide as "100%", so the figure sits right after the bar and the rows still line up. */
+.fap-progress-value {
+    flex: none;
+    min-width: 2.25rem;
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    text-align: end;
+    color: var(--gray-600);
+}
+
+.dark .fap-progress-value {
+    color: var(--gray-300);
+}
+
+.fap-progress-value-negative {
+    color: var(--danger-700);
+}
+
+.dark .fap-progress-value-negative {
+    color: var(--danger-400);
+}
+
+.fap-progress-column {
+    width: 100%;
+    padding: 1rem 0.75rem;
+}
+
+/* With no state and a placeholder, the column says why instead of drawing an empty bar. */
+.fap-progress-placeholder {
+    font-size: 0.875rem;
+    color: var(--gray-400);
+}
+
+.dark .fap-progress-placeholder {
+    color: var(--gray-500);
+}

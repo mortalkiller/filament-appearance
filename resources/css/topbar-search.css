@@ -1,0 +1,25 @@
+/*
+ * AppearancePlugin::topbarSearchAtStart(). On desktop the global search leaves the end of the
+ * topbar and sits at its start, next to the sidebar, with room for a longer placeholder. What
+ * comes before and after it in the markup (render hooks, notifications, the user menu) stays at
+ * the end.
+ */
+:root:has(meta[name="filament-appearance"][content~="search"]) {
+    @media (min-width: 1024px) {
+        .fi-topbar-end {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .fi-topbar-end > .fi-global-search-ctn {
+            order: -1;
+            flex: 0 1 26rem;
+            min-width: 0;
+            margin-inline-end: auto;
+        }
+
+        .fi-topbar .fi-global-search-field {
+            width: 100%;
+        }
+    }
+}

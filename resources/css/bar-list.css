@@ -1,0 +1,70 @@
+/*
+ * Support\BarList (resources/views/components/bar-list.blade.php): a ranked list of labelled
+ * bars, each one as long as its amount relative to the largest. The bar takes its colour from
+ * --fap-progress-color, which the view sets from any colour registered on the panel.
+ */
+.fap-bar-list {
+    display: grid;
+    /* A long label is cut with an ellipsis instead of widening the list past its card. */
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.875rem;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.fap-bar-list-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.375rem;
+    min-width: 0;
+}
+
+.fap-bar-list-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--gray-950);
+}
+
+.fap-bar-list-label {
+    min-width: 0;
+    overflow: hidden;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.fap-bar-list-value {
+    flex: none;
+    font-variant-numeric: tabular-nums;
+    color: var(--gray-700);
+}
+
+.fap-bar-list-strong .fap-bar-list-value {
+    font-weight: 600;
+    color: var(--gray-950);
+}
+
+.fap-bar-list-note {
+    font-size: 0.75rem;
+    color: var(--fap-bar-list-note-color, var(--gray-500));
+}
+
+.dark {
+    & .fap-bar-list-head,
+    & .fap-bar-list-strong .fap-bar-list-value {
+        color: var(--gray-100);
+    }
+
+    & .fap-bar-list-value {
+        color: var(--gray-300);
+    }
+
+    & .fap-bar-list-note {
+        color: var(--fap-bar-list-note-color-dark, var(--gray-400));
+    }
+}

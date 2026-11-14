@@ -1,0 +1,19 @@
+/*
+ * Entry labels as small capitals: 12px, upper case, spaced and muted, the way a printed document
+ * names its fields ("DATE", "DUE", "REFERENCE"). Opt in on the grid or section that holds the
+ * entries, and only those inside it change:
+ *
+ *     Grid::make(4)->extraAttributes(['class' => 'fap-caps-labels'])
+ */
+.fap-caps-labels .fi-in-entry-label {
+    font-size: 0.75rem;
+    line-height: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--gray-500);
+}
+
+.dark .fap-caps-labels .fi-in-entry-label {
+    color: var(--gray-400);
+}

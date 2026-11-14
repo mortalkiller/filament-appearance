@@ -1,0 +1,61 @@
+/*
+ * A details card as a key/value list: each inline-labelled entry on one line, the label as wide
+ * as its text and muted, the value at the end, the lines close together. Filament gives an inline
+ * label a third of the width and the weight of a heading, which breaks short labels in a narrow
+ * card. Opt in on a section (or any wrapper) holding inline-labelled entries:
+ *
+ *     Section::make('Details')->inlineLabel()->extraAttributes(['class' => 'fap-key-value'])
+ *
+ * Entries without an inline label (a description, notes) keep Filament's layout.
+ *
+ * The line the others add up to takes `fap-key-value-total`: a rule above it and its label in
+ * the weight and colour of the value.
+ *
+ *     TextEntry::make('total')->extraEntryWrapperAttributes(['class' => 'fap-key-value-total'])
+ */
+.fap-key-value {
+    & .fi-sc {
+        row-gap: 0.625rem;
+    }
+
+    & .fi-in-entry.fi-in-entry-has-inline-label {
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: baseline;
+        column-gap: 1rem;
+
+        & .fi-in-entry-content-col {
+            grid-column: auto;
+        }
+
+        & .fi-in-entry-label {
+            font-weight: 400;
+            color: var(--gray-500);
+        }
+
+        & .fi-in-entry-content {
+            text-align: end;
+        }
+    }
+}
+
+.dark .fap-key-value .fi-in-entry.fi-in-entry-has-inline-label .fi-in-entry-label {
+    color: var(--gray-400);
+}
+
+.fap-key-value .fi-in-entry.fap-key-value-total {
+    padding-top: 0.625rem;
+    border-top: 1px solid var(--gray-300);
+
+    & .fi-in-entry-label {
+        font-weight: 600;
+        color: var(--gray-950);
+    }
+}
+
+.dark .fap-key-value .fi-in-entry.fap-key-value-total {
+    border-color: rgb(255 255 255 / 0.2);
+
+    & .fi-in-entry-label {
+        color: #fff;
+    }
+}

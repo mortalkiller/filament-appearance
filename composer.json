@@ -1,0 +1,67 @@
+{
+    "$schema": "https://getcomposer.org/schema.json",
+    "name": "mortalkiller/filament-appearance",
+    "description": "Colour palettes, a palette picker and a phone-friendly panel shell for Filament.",
+    "homepage": "https://github.com/mortalkiller/filament-appearance",
+    "keywords": [
+        "filament",
+        "laravel",
+        "theme",
+        "palette",
+        "appearance",
+        "dark-mode",
+        "mobile"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/mortalkiller/filament-appearance/issues",
+        "source": "https://github.com/mortalkiller/filament-appearance"
+    },
+    "require": {
+        "filament/filament": "^5.8.1",
+        "illuminate/support": "^12.0|^13.0",
+        "php": "^8.2",
+        "spatie/laravel-package-tools": "^1.15.0"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.0",
+        "mortalkiller/filament-package-standard": "^2.0",
+        "orchestra/testbench": "^10.0|^11.0",
+        "phpunit/phpunit": "^11.5|^12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "MortalKiller\\FilamentAppearance\\": "src/",
+            "MortalKiller\\FilamentAppearance\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MortalKiller\\FilamentAppearance\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "MortalKiller\\FilamentAppearance\\AppearanceServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "scripts": {
+        "analyse": "phpstan analyse --memory-limit=1G",
+        "check": [
+            "@lint",
+            "@analyse",
+            "@test"
+        ],
+        "format": "pint",
+        "lint": "pint --test",
+        "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
+        "test": "phpunit"
+    }
+}

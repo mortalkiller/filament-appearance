@@ -1,0 +1,383 @@
+/*
+ * The panel in the colours of the palette in use. The palette's colours arrive as --fap-*
+ * variables set in the page head (resources/views/head.blade.php, Palette::cssVariables()); the
+ * values below are only what a page without them falls back to.
+ */
+:root {
+    --fap-action: var(--primary-600);
+    --fap-on-action: #ffffff;
+    --fap-navigation: var(--fap-action);
+    --fap-navigation-text: #ffffff;
+    --fap-navigation-text-muted: #ffffff;
+    --fap-navigation-hover: rgb(255 255 255 / 0.08);
+    --fap-navigation-active: rgb(255 255 255 / 0.16);
+    --fap-navigation-ring: rgb(255 255 255 / 0.12);
+}
+
+/* Light mode canvas behind cards and tables, when the palette sets one. */
+:root:not(.dark) .fi-body,
+:root:not(.dark) .fi-main-ctn {
+    background-color: var(--fap-background, var(--gray-50));
+}
+
+/*
+ * Topbar. On desktop only the sidebar wears the palette's navigation colour: the topbar is a
+ * plain surface holding the search, notifications and the user menu. The rules below keep
+ * reading the --fap-navigation-* variables, so on desktop they are reset to neutral values.
+ * On a phone the topbar is the app bar: it keeps the navigation colour and shows the logo.
+ */
+.fi-topbar {
+    background-color: var(--fap-navigation);
+    --tw-ring-color: var(--fap-navigation-ring);
+}
+
+@media (min-width: 1024px) {
+    .fi-topbar {
+        --fap-navigation-text: var(--gray-950);
+        --fap-navigation-text-muted: var(--gray-500);
+        --fap-navigation-hover: var(--gray-100);
+        --fap-navigation-active: var(--gray-100);
+        --fap-navigation-ring: rgb(0 0 0 / 0.08);
+
+        background-color: white;
+    }
+
+    .dark .fi-topbar {
+        --fap-navigation-text: white;
+        --fap-navigation-text-muted: var(--gray-400);
+        --fap-navigation-hover: rgb(255 255 255 / 0.06);
+        --fap-navigation-active: rgb(255 255 255 / 0.1);
+        --fap-navigation-ring: rgb(255 255 255 / 0.1);
+
+        background-color: var(--gray-900);
+    }
+}
+
+/*
+ * On desktop Filament puts the logo at the start of the topbar, above the sidebar. That corner
+ * takes the sidebar's width and the palette's navigation colour, so the logo sits on the same
+ * colour as the menu below it (which logo: AppearancePlugin::getBrandLogo()).
+ */
+@media (min-width: 1024px) {
+    .fi-body-has-navigation .fi-topbar {
+        padding-inline-start: 0;
+    }
+
+    .fi-body-has-navigation .fi-topbar-start {
+        align-self: stretch;
+        width: var(--sidebar-width);
+        margin-inline-end: 0.5rem;
+        padding-inline-start: 0.75rem;
+        background-color: var(--fap-navigation);
+    }
+}
+
+.fi-topbar .fi-logo,
+.fi-sidebar .fi-logo {
+    color: var(--fap-navigation-text);
+}
+
+.fi-topbar .fi-icon-btn,
+.fi-topbar-item-btn > .fi-icon {
+    color: var(--fap-navigation-text-muted);
+}
+
+.fi-topbar .fi-icon-btn:hover,
+.fi-topbar .fi-icon-btn:focus-visible {
+    color: var(--fap-navigation-text);
+    background-color: var(--fap-navigation-hover);
+}
+
+.fi-topbar-item-label {
+    color: var(--fap-navigation-text);
+}
+
+.fi-topbar-item-btn:hover,
+.fi-topbar-item-btn:focus-visible {
+    background-color: var(--fap-navigation-hover);
+}
+
+.fi-topbar-item.fi-active .fi-topbar-item-btn {
+    background-color: var(--fap-navigation-active);
+}
+
+.fi-topbar-item.fi-active .fi-topbar-item-btn > .fi-icon,
+.fi-topbar-item.fi-active .fi-topbar-item-label {
+    color: var(--fap-navigation-text);
+}
+
+.fi-topbar :is(.fi-topbar-nav-groups > .fi-dropdown .fi-topbar-item-btn, .fi-user-menu-trigger, .fi-tenant-menu-trigger) {
+    display: flex;
+    min-height: var(--topbar-height);
+    align-items: center;
+}
+
+.fi-topbar .fi-user-menu-trigger:focus-visible {
+    outline: none;
+
+    & > .fi-user-avatar {
+        outline: 2px solid var(--fap-navigation-text);
+        outline-offset: 2px;
+    }
+}
+
+/* Filament anchors the dropdown to the full button. Keep its highlight compact. */
+.fi-topbar :is(.fi-topbar-nav-groups > .fi-dropdown .fi-topbar-item-btn, .fi-tenant-menu-trigger) {
+    position: relative;
+    isolation: isolate;
+
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 50% 0 auto;
+        height: 2.25rem;
+        translate: 0 -50%;
+        z-index: -1;
+        border-radius: 0.5rem;
+        background-color: var(--fap-topbar-highlight, transparent);
+    }
+
+    &:is(:hover, :focus-visible) {
+        --fap-topbar-highlight: var(--fap-navigation-hover);
+        background-color: transparent;
+    }
+}
+
+.fi-topbar .fi-topbar-nav-groups > .fi-dropdown .fi-topbar-item.fi-active .fi-topbar-item-btn {
+    --fap-topbar-highlight: var(--fap-navigation-active);
+    background-color: transparent;
+}
+
+/* Global search field on the topbar */
+.fi-topbar .fi-global-search-field .fi-input-wrp {
+    background-color: var(--fap-navigation-hover);
+    --tw-ring-color: var(--fap-navigation-ring);
+}
+
+.fi-topbar .fi-global-search-field .fi-input-wrp .fi-icon {
+    color: var(--fap-navigation-text-muted);
+}
+
+.fi-topbar .fi-global-search-field input {
+    color: var(--fap-navigation-text);
+}
+
+.fi-topbar .fi-global-search-field input::placeholder {
+    color: var(--fap-navigation-text-muted);
+}
+
+/* Sidebar */
+.fi-sidebar,
+.fi-body-has-topbar .fi-sidebar-header {
+    background-color: var(--fap-navigation);
+}
+
+.fi-body-has-topbar .fi-sidebar-header {
+    --tw-ring-color: var(--fap-navigation-ring);
+}
+
+/* The palette's glows of colour (Palette::navigationGlow()), when it has any. */
+.fi-sidebar {
+    background-image: var(--fap-navigation-image, none);
+}
+
+.fi-sidebar-group-label {
+    color: var(--fap-navigation-text-muted);
+}
+
+.fi-sidebar-group-btn .fi-icon,
+.fi-sidebar-group-dropdown-trigger-btn .fi-icon,
+.fi-sidebar-item-btn > .fi-icon,
+.fi-sidebar-database-notifications-btn > .fi-icon,
+.fi-sidebar .fi-icon-btn {
+    color: var(--fap-navigation-text-muted);
+}
+
+.fi-sidebar-item-label,
+.fi-sidebar-database-notifications-btn-label {
+    color: var(--fap-navigation-text);
+}
+
+.fi-sidebar-item.fi-sidebar-item-has-url > .fi-sidebar-item-btn:hover,
+.fi-sidebar-item.fi-sidebar-item-has-url > .fi-sidebar-item-btn:focus-visible,
+.fi-sidebar-group-dropdown-trigger-btn:hover,
+.fi-sidebar-database-notifications-btn:hover,
+.fi-sidebar .fi-icon-btn:hover {
+    background-color: var(--fap-navigation-hover);
+}
+
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+    background-color: var(--fap-navigation-active);
+}
+
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-icon,
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-sidebar-item-label,
+.fi-sidebar-group.fi-active .fi-sidebar-group-dropdown-trigger-btn .fi-icon {
+    color: var(--fap-navigation-text);
+}
+
+.fi-sidebar-item-grouped-border-part,
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-sidebar-item-grouped-border > .fi-sidebar-item-grouped-border-part {
+    background-color: var(--fap-navigation-text-muted);
+}
+
+.fi-sidebar-item-grouped-border-part-not-first,
+.fi-sidebar-item-grouped-border-part-not-last {
+    background-color: var(--fap-navigation-ring);
+}
+
+.fi-sidebar-footer {
+    border-color: var(--fap-navigation-ring);
+}
+
+.fi-btn.fi-color-primary:not(.fi-outlined):not(label):not([aria-pressed]) {
+    background-color: var(--fap-action);
+    color: var(--fap-on-action, #ffffff);
+
+    & > .fi-icon {
+        color: currentColor;
+    }
+
+    &:not(.fi-disabled):not([disabled]):hover {
+        background-color: color-mix(in srgb, var(--fap-action) 88%, black);
+    }
+}
+
+.fi-sidebar .fi-user-menu-trigger-text {
+    color: var(--fap-navigation-text);
+}
+
+/*
+ * Counts on menu items: a round pill drawn from the navigation colour itself, so it reads on
+ * any palette, dark or light bar. A count with a status colour (an overdue amount, something to
+ * pay or reconcile) is a light pill of that colour with dark text, which stands out on every bar.
+ */
+.fi-sidebar-item .fi-badge {
+    min-width: 1.25rem;
+    height: 1.25rem;
+    padding-block: 0;
+    padding-inline: 0.375rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    box-shadow: none;
+    --tw-ring-shadow: 0 0 #0000;
+
+    /* The number fills the pill's height, so it sits in the middle of it. */
+    & .fi-badge-label-ctn,
+    & .fi-badge-label {
+        line-height: 1.25rem;
+    }
+
+    &.fi-color-primary,
+    &.fi-color-gray,
+    &:not(.fi-color) {
+        background-color: var(--fap-navigation-active);
+        color: var(--fap-navigation-text);
+    }
+
+    &.fi-color-warning {
+        background-color: var(--warning-200);
+        color: var(--warning-950);
+    }
+
+    &.fi-color-danger {
+        background-color: var(--danger-200);
+        color: var(--danger-950);
+    }
+
+    &.fi-color-success {
+        background-color: var(--success-200);
+        color: var(--success-950);
+    }
+
+    &.fi-color-info {
+        background-color: var(--info-200);
+        color: var(--info-950);
+    }
+}
+
+/* The account switcher follows the navigation text colours. */
+.fi-topbar .fi-tenant-menu-trigger,
+.fi-topbar .fi-tenant-menu-trigger-tenant-name,
+.fi-sidebar .fi-tenant-menu-trigger,
+.fi-sidebar .fi-tenant-menu-trigger-tenant-name {
+    color: var(--fap-navigation-text);
+}
+
+.fi-topbar .fi-tenant-menu-trigger-current-tenant-label,
+.fi-topbar .fi-tenant-menu-trigger > .fi-icon,
+.fi-sidebar .fi-tenant-menu-trigger-current-tenant-label,
+.fi-sidebar .fi-tenant-menu-trigger > .fi-icon {
+    color: var(--fap-navigation-text-muted);
+}
+
+.fi-topbar .fi-tenant-menu-trigger:hover,
+.fi-topbar .fi-tenant-menu-trigger:focus-visible,
+.fi-sidebar .fi-tenant-menu-trigger:hover,
+.fi-sidebar .fi-tenant-menu-trigger:focus-visible {
+    background-color: var(--fap-navigation-hover);
+}
+
+/*
+ * Sidebar scrollbar: thin and translucent on the navigation colour, instead of the browser's grey
+ * bar, and only while the pointer is over the menu. The space it takes is kept either way, so the
+ * menu does not shift when it appears.
+ */
+.fi-sidebar-nav {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+}
+
+.fi-sidebar-nav:is(:hover, :focus-within) {
+    scrollbar-color: var(--fap-navigation-text-muted) transparent;
+}
+
+.fi-sidebar-nav::-webkit-scrollbar {
+    width: 6px;
+}
+
+.fi-sidebar-nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.fi-sidebar-nav::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 9999px;
+}
+
+.fi-sidebar-nav:is(:hover, :focus-within)::-webkit-scrollbar-thumb {
+    background-color: var(--fap-navigation-text-muted);
+}
+
+/*
+ * Top navigation on one line: tighter spacing between menus and a narrower search field, so the
+ * menus fit next to the logo, the bell and the avatar on a 1280–1440px screen.
+ */
+@media (min-width: 1024px) {
+    .fi-topbar-nav-groups {
+        column-gap: 0.25rem;
+        margin-block: 0;
+        margin-inline: 0.75rem;
+        flex-wrap: nowrap;
+    }
+
+    .fi-topbar-item-btn {
+        padding-inline: 0.5rem;
+        column-gap: 0.375rem;
+    }
+
+    .fi-topbar-end {
+        column-gap: 0.75rem;
+    }
+
+    .fi-topbar .fi-global-search-field {
+        width: 11rem;
+    }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+    /* Ungrouped items keep their label; the icon is redundant there. */
+    .fi-topbar-nav-groups > .fi-topbar-item > .fi-topbar-item-btn > .fi-icon {
+        display: none;
+    }
+}

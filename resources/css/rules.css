@@ -1,0 +1,49 @@
+/*
+ * A hairline above or below a block, with room between the two, to separate the parts of a card
+ * without splitting it into sections: the row of dates of a document, the notes at its foot.
+ * Add one or both to any component:
+ *
+ *     Grid::make(4)->extraAttributes(['class' => 'fap-rule-top fap-rule-bottom'])
+ *
+ * `fap-divided` does the same between the rows of a section, for a card that is a short list:
+ *
+ *     Section::make('History')->extraAttributes(['class' => 'fap-divided'])
+ *
+ * `fap-part` is for the blocks of a form opened in a modal: uncontained sections, each one after
+ * the first under a hairline, so the modal does not stack cards inside its own card:
+ *
+ *     Section::make('Tax details')->contained(false)->extraAttributes(['class' => 'fap-part'])
+ */
+.fap-rule-top {
+    padding-top: 1rem;
+    border-top: 1px solid var(--gray-200);
+}
+
+.fap-rule-bottom {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.fap-divided > .fi-section > .fi-section-content-ctn > .fi-section-content {
+    row-gap: 0;
+
+    & > .fi-grid-col + .fi-grid-col {
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--gray-200);
+    }
+}
+
+.dark :is(.fap-rule-top, .fap-rule-bottom),
+.dark .fap-divided > .fi-section > .fi-section-content-ctn > .fi-section-content > .fi-grid-col + .fi-grid-col {
+    border-color: rgb(255 255 255 / 0.1);
+}
+
+:is(.fi-sc > :has(> .fap-part, > * > .fap-part) ~ * > .fap-part, .fi-sc > :has(> .fap-part, > * > .fap-part) ~ * > * > .fap-part) {
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--gray-200);
+}
+
+.dark :is(.fi-sc > :has(> .fap-part, > * > .fap-part) ~ * > .fap-part, .fi-sc > :has(> .fap-part, > * > .fap-part) ~ * > * > .fap-part) {
+    border-color: rgb(255 255 255 / 0.1);
+}

@@ -1,0 +1,67 @@
+/*
+ * AppearancePlugin::mobileEdgeToEdge(). Phone (below 768px): sections go from one edge of the
+ * screen to the other, with square corners, so the content gets the whole width. The page keeps
+ * its 1rem side padding for loose content (headings, buttons, filters); cards cancel it with a
+ * negative margin and keep their own inner padding, so the text stays where it was. Cards nested
+ * in another card or in a modal are left as they are. Give any other block the class
+ * "fap-edge-to-edge" to have it behave like a section.
+ */
+:root:has(meta[name="filament-appearance"][content~="edge"]) {
+    @media (max-width: 767.98px) {
+        .fi-main :is(.fi-section, .fi-ta-ctn, .fi-wi-stats-overview-stat, .fap-edge-to-edge):not(:is(.fi-section, .fi-ta-ctn, .fi-modal, .fap-edge-to-edge) *) {
+            margin-inline: -1rem;
+            border-block: 1px solid var(--gray-200);
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        &.dark .fi-main :is(.fi-section, .fi-ta-ctn, .fi-wi-stats-overview-stat, .fap-edge-to-edge):not(:is(.fi-section, .fi-ta-ctn, .fi-modal, .fap-edge-to-edge) *) {
+            border-color: rgb(255 255 255 / 0.1);
+        }
+
+        /*
+         * Stat cards: two per row, as one block divided by hairlines, instead of a tall stack of
+         * separate cards. Filament wraps them in a section with no padding, which is already
+         * edge to edge, so the cards only lose their own corners, shadow and gaps.
+         */
+        .fi-wi-stats-overview .fi-section-content.fi-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0;
+        }
+
+        .fi-wi-stats-overview .fi-grid-col > .fi-sc-component,
+        .fi-wi-stats-overview .fi-grid-col .fi-wi-stats-overview-stat {
+            height: 100%;
+        }
+
+        .fi-wi-stats-overview .fi-grid-col .fi-wi-stats-overview-stat {
+            padding: 0.75rem 1rem;
+            border-block-end: 1px solid var(--gray-200);
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        .fi-wi-stats-overview .fi-grid-col:nth-child(odd) .fi-wi-stats-overview-stat {
+            border-inline-end: 1px solid var(--gray-200);
+        }
+
+        .fi-wi-stats-overview .fi-grid-col:nth-last-child(-n + 2):nth-child(odd) .fi-wi-stats-overview-stat,
+        .fi-wi-stats-overview .fi-grid-col:last-child .fi-wi-stats-overview-stat {
+            border-block-end: 0;
+        }
+
+        &.dark .fi-wi-stats-overview .fi-grid-col .fi-wi-stats-overview-stat {
+            border-color: rgb(255 255 255 / 0.1);
+        }
+
+        .fi-wi-stats-overview .fi-wi-stats-overview-stat-value {
+            font-size: 1.25rem;
+            line-height: 1.75rem;
+        }
+
+        /* Nothing may push the page sideways. */
+        .fi-main {
+            overflow-x: clip;
+        }
+    }
+}

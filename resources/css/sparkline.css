@@ -1,0 +1,41 @@
+/*
+ * Support\BarSparkline (Stat::bars()): a row of bars at the foot of a stat, the last one in full
+ * colour and the others lighter. A zero still shows as a sliver, so every period has its place,
+ * and each period's whole column answers the pointer for its tooltip.
+ */
+.fap-bar-sparkline {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    width: 100%;
+    height: 2.25rem;
+    margin-top: 0.375rem;
+
+    & > .fap-bar-sparkline-column {
+        display: flex;
+        flex: 1;
+        align-items: flex-end;
+        min-width: 0;
+        height: 100%;
+    }
+
+    & i {
+        width: 100%;
+        min-height: 2px;
+        border-radius: 2px 2px 0 0;
+        background-color: var(--fap-sparkline-color, var(--primary-500));
+        opacity: 0.45;
+    }
+
+    & i.fap-bar-sparkline-current,
+    & > .fap-bar-sparkline-column:hover > i {
+        opacity: 1;
+    }
+}
+
+/* In a stat, the bars take the description's place and its full width. */
+.fi-wi-stats-overview-stat-description:has(.fap-bar-sparkline),
+.fi-wi-stats-overview-stat-description:has(.fap-bar-sparkline) > span {
+    display: block;
+    width: 100%;
+}

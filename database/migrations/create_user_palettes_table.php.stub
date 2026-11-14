@@ -1,0 +1,45 @@
+<?php
+
+declare(strict_types=1);
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Colour palettes a user made for themselves. Colours are "#rrggbb".
+     */
+    public function up(): void
+    {
+        Schema::create($this->table(), function (Blueprint $table): void {
+            $table->id();
+            $table->foreignId('user_id')->constrained($this->usersTable())->cascadeOnDelete();
+            $table->string('name', 40);
+            $table->string('primary_color', 7);
+            $table->string('navigation_color', 7);
+            $table->string('background_color', 7);
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists($this->table());
+    }
+
+    private function table(): string
+    {
+        return config('filament-appearance.custom_palettes_table', 'user_palettes');
+    }
+
+    private function usersTable(): string
+    {
+        /** @var class-string<Model> $model */
+        $model = config('filament-appearance.user_model') ?? config('auth.providers.users.model');
+
+        return (new $model)->getTable();
+    }
+};

@@ -1,0 +1,14 @@
+/*
+ * Sections side by side with the same height. Filament's grid already stretches the cells of a
+ * row; this makes what is inside each cell (the widget, and its section or table) fill it, so a
+ * short card does not end above its neighbour. Opt in per row, on a grid whose cells hold one
+ * widget or section each:
+ *
+ *     Grid::make(3)->extraAttributes(['class' => 'fap-equal-height'])
+ *
+ * Filament puts extra attributes on the wrapper of a schema grid, so the class is looked for
+ * there and on the grid itself. Nothing inside a section's content is touched.
+ */
+:is(.fap-equal-height.fi-grid, .fap-equal-height > .fi-grid) > .fi-grid-col :is(.fi-sc-component, .fi-sc-component > *, .fi-grid, .fi-grid-col, .fi-wi-widget, .fi-sc-section, .fi-section, .fi-ta-ctn):not(.fi-section-content *, .fi-ta-content *) {
+    height: 100%;
+}

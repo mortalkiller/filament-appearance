@@ -1,0 +1,97 @@
+/*
+ * AppearancePlugin::underlinedTabs(). Tabs, everywhere: a row of labels on the page with a line
+ * under the active one, instead of Filament's floating pill card. Covers list tabs,
+ * sub-navigation tabs and schema tabs.
+ *
+ * Like every optional part of the shell, the rules only apply while the plugin lists the feature
+ * in the "filament-appearance" meta tag (resources/views/head.blade.php).
+ */
+:root:has(meta[name="filament-appearance"][content~="tabs"]) {
+    .fi-main .fi-tabs:not(.fi-vertical) {
+        gap: 0.25rem;
+
+        &:not(.fi-contained) {
+            width: 100%;
+            margin-inline: 0;
+            padding: 0;
+            border-radius: 0;
+            background-color: transparent;
+            /*
+             * The line under the row is a shadow, not a border, and the tabs sit on it rather
+             * than overlapping it: Filament lets the row scroll sideways, and a tab reaching past
+             * the row's edge made it scroll up and down too (with a scrollbar beside the tabs).
+             */
+            box-shadow: inset 0 -1px 0 var(--gray-200);
+        }
+
+        &.fi-contained {
+            padding-block: 0;
+        }
+
+        & .fi-tabs-item {
+            border-radius: 0;
+            padding: 0.75rem 0.875rem;
+            border-bottom: 2px solid transparent;
+            background-color: transparent;
+
+            &:hover,
+            &:focus-visible {
+                background-color: transparent;
+                border-bottom-color: var(--gray-300);
+            }
+
+            &.fi-active {
+                border-bottom-color: var(--primary-600);
+
+                & .fi-tabs-item-label {
+                    font-weight: 600;
+                }
+
+                /*
+                 * This border is the line under the active tab. A package that draws its own
+                 * (filament-page-header underlines its sub-navigation with a pseudo-element)
+                 * would add a second one beside it.
+                 */
+                &::after {
+                    content: none;
+                }
+            }
+        }
+    }
+
+    /*
+     * A tab's count is a small round pill in a neutral tone, so the line under the active tab is
+     * the only use of the palette colour in the row. A count given a status colour (warning,
+     * danger, success, info) keeps it: that colour says something.
+     */
+    .fi-main .fi-tabs .fi-tabs-item .fi-badge {
+        border-radius: 9999px;
+
+        &.fi-color-primary,
+        &:not(.fi-color) {
+            background-color: var(--gray-100);
+            color: var(--gray-600);
+            box-shadow: none;
+            --tw-ring-shadow: 0 0 #0000;
+        }
+    }
+
+    &.dark .fi-main .fi-tabs .fi-tabs-item .fi-badge:is(.fi-color-primary, :not(.fi-color)) {
+        background-color: rgb(255 255 255 / 0.1);
+        color: var(--gray-300);
+    }
+
+    &.dark .fi-main .fi-tabs:not(.fi-vertical) {
+        &:not(.fi-contained) {
+            box-shadow: inset 0 -1px 0 rgb(255 255 255 / 0.1);
+        }
+
+        & .fi-tabs-item:is(:hover, :focus-visible) {
+            border-bottom-color: rgb(255 255 255 / 0.25);
+        }
+
+        & .fi-tabs-item.fi-active {
+            border-bottom-color: var(--primary-400);
+        }
+    }
+}

@@ -1,0 +1,67 @@
+/*
+ * A table of entries as lines on the page: no box, no grey heading, no column rules. Only a rule
+ * under the heading and between the rows, the heading small and muted, and the first and last
+ * cells flush with the edges. For a document's lines or any short list inside a card that already
+ * has its own frame. Opt in on the entry:
+ *
+ *     RepeatableEntry::make('lines')
+ *         ->table([...])
+ *         ->extraAttributes(['class' => 'fap-plain-table'])
+ *
+ * On a narrow container Filament stacks each row as a card; those keep their spacing and only
+ * lose the box.
+ */
+.fap-plain-table.fi-in-table-repeatable {
+    & > table {
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+
+        & > thead {
+            border-color: var(--gray-300);
+
+            & > tr > th {
+                padding: 0 0 0.5rem;
+                border-inline-end-width: 0;
+                border-radius: 0;
+                background: transparent;
+                font-size: 0.75rem;
+                line-height: 1rem;
+                font-weight: 500;
+                color: var(--gray-500);
+
+                &:not(:first-of-type) {
+                    padding-inline-start: 1rem;
+                }
+            }
+        }
+
+        & > tbody > tr {
+            padding-inline: 0;
+        }
+    }
+
+    @container (min-width: 36rem) {
+        & > table > tbody > tr > td {
+            padding: 0.75rem 0;
+            vertical-align: top;
+
+            &:not(:first-of-type) {
+                padding-inline-start: 1rem;
+            }
+        }
+    }
+}
+
+.dark .fap-plain-table.fi-in-table-repeatable > table {
+    background: transparent;
+
+    & > thead {
+        border-color: rgb(255 255 255 / 0.2);
+
+        & > tr > th {
+            background: transparent;
+            color: var(--gray-400);
+        }
+    }
+}

@@ -1,0 +1,16 @@
+/*
+ * AppearancePlugin::tableSearchAtStart(). Filament puts a table's toolbar actions at the start of
+ * its toolbar and the search, filters and column manager at the end. Here they swap: the search
+ * comes first, where the eye starts, and actions such as "New" close the row.
+ */
+:root:has(meta[name="filament-appearance"][content~="tablesearch"]) {
+    .fi-ta-header-toolbar {
+        flex-direction: row-reverse;
+
+        /* Filament pushes the search block away from the actions with an automatic start margin. */
+        & > :nth-child(2) {
+            margin-inline-start: 0;
+            margin-inline-end: auto;
+        }
+    }
+}
